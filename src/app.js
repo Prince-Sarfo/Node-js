@@ -4,11 +4,19 @@
 // express
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv').config();
 mongoose.set('strictQuery',  false);
 app = express();
 app.use(express.json());
-app.use(express.urlencoded({'extended':true}))
-const PORT = 3000;
+app.use(express.urlencoded({'extended':true}));
+
+if(process.env.NODE_ENV !== 'Production'){
+    require('dotenv').config();
+}
+
+const PORT = process.env.PORT || 3000;
+const CONNECTION = process.env.CONNECTION ;
+
 
 const Customers =[
     {
@@ -54,7 +62,7 @@ app.post('/', (req, res)=>{
 const start = async() =>{
   try{
 
-    await mongoose.connect('mongodb+srv://Prince:princesarfo@cluster0.7urxoqi.mongodb.net/?retryWrites=true&w=majority');
+    await mongoose.connect(CONNECTION);
     app.listen(PORT, () => {
     console.log('App listening on port ' + PORT);
 });
